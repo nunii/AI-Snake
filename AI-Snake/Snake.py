@@ -21,7 +21,7 @@ class Snake(list):
             self[i].y = self[i - 1].y
 
     def check_death(self, display_width, display_height):
-        if not (1 <= self[0].x <= display_width and 1 <= self[0].y <= display_height):
+        if not (1 < self[0].x < display_width and 1 < self[0].y < display_height):
             return True
         return any(body_part.x == self[0].x and body_part.y == self[0].y for body_part in self[1:])
 

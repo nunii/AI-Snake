@@ -1,86 +1,75 @@
-
-# basic snake game code is from : https://codereview.stackexchange.com/questions/161377/python-snake-game-with-pygame
-from Snake import Snake
-from Board import Board
-from SnakeBody import SnakeBody
-from Food import Food
+from board import board
+from snake import Snake
+# import time
 import pygame
-import time
-import random
 
 
-def main():
+def drawsnake(snake):
+    for i in range(len(snake)):
+        pygame.draw.rect(game_board.game_display, board.teal, (snake[i].x, snake[i].y, Snake.factor, Snake.factor))
+    pygame.draw.rect(game_board.game_display, board.gold, (snake[i].x, snake[i].y, Snake.factor, Snake.factor - 3))
+    pygame.display.update()
 
-    clock = pygame.time.Clock()
-    display_width = 600
-    display_height = 800
+
+# def update_snake(score):
+#    i = len(snake) - 1
+#
+#    while i > 0:
+#        snake[i].x = snake[i - 1].x
+#        snake[i].y = snake[i - 1].y
+#        i -= 1    
 
 
-    # no idea how does the score works.
-    score = 60
-
-    game_display = Board(display_width, display_height)
-    snake = Snake(20, 20, 3)
-    food = Food(5, display_width, display_height, 5)
-    # x = 0
-    # y = 0
+########### M A I N ##############
+if __name__ == "__main__":
+    game_board = board(500, 500)
+    snake = [Snake(230, 220), Snake(240, 220), Snake(250, 220)]
     x_change = 0
     y_change = 0
-    first_time = True
-    eat = True
+    drawsnake(snake)
+    exitGame = False
+    while not exitGame:
+        for event in pygame.event.get():  # {}
+            if event.type == pygame.QUIT:  # if clicked on exit
+                exitGame = True
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
             if event.type == pygame.KEYDOWN:
                 first_time = False
                 if event.key == pygame.K_LEFT:
-                    if x_change != 10:
+                    if x_change is not 10:
                         x_change = -10
                         y_change = 0
                 elif event.key == pygame.K_RIGHT:
                     if x_change != -10:
                         x_change = 10
                         y_change = 0
-                elif event.key == pygame.K_UP:
-                    if y_change != 10:
-                        x_change = 0
-                        y_change = -10
-                elif event.key == pygame.K_DOWN:
-                    if y_change != -10:
-                        x_change = 0
-                        y_change = 10
+        #               elif event.key == pygame.K_UP:
+        #                   if y_change is not 10:
+        #                       x_change = 0
+        #                       y_change = -10
+        #               elif event.key == pygame.K_DOWN:
+        #                   if y_change != -10:
+        #                       x_change = 0
+        #                       y_change = 10
+        #               elif event.key == pygame.K_c:
+        #                   x_change = 0
+        #                   y_change = 0
 
-        if not first_time:
-            snake.update(score)
-        if score % 10 == 0 and eat:
-            snake.append(SnakeBody(
-                snake[len(snake) - 1].x, snake[len(snake) - 1].y))
-            print(len(snake))
-            eat = False
-        snake.move_head(x_change, y_change)
+        #       if not first_time:
+        #            update_snake(score)
+        #       if score % 10 == 0 and eat:
+        #           snake.append(snake_body(snake[len(snake)-1].x, snake[len(snake)-1].y))
+        #            print(len(snake))
+        #            eat = False
 
-        if (snake[0].x < food.food_x + 10 and snake[0].x > food.food_x - 10
-                and snake[0].y < food.food_y + 10 and snake[0].y > food.food_y - 10):
-            score += 10
-            food.food_x = random.randrange(5, display_width - 5)
-            food.food_y = random.randrange(5, display_height - 5)
-            eat = True
+        snake[0].x += x_change
+        snake[0].y += y_change
+        #            if event.type == pygame.KEYDOWN:
+        #                if event.key == pygame.K_LEFT:
+        #                    lead_x -= 10
+        #                if event.key == pygame.K_RIGHT:
+        #                    lead_x += 10
+        pygame.display.update()
 
-        if snake.check_death(display_width, display_height):
-            game_display.pop_exit_window()
-
-        game_display.GAME_display.fill(Board.white)
-
-        pygame.draw.rect(game_display.GAME_display, Board.black, (food.food_x, food.food_y, Snake.factor, Snake.factor))
-        snake.draw(game_display.GAME_display)
-
-        pygame.display.flip()
-        time.sleep(0.045)
-        clock.tick(60)
-
-
-if __name__ == "__main__":
-    main()
+    # {}
+    game_board.close()
