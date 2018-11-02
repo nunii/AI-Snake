@@ -1,75 +1,106 @@
-from board import board
-from snake import Snake
-# import time
+# basic snake game code is from : https://codereview.stackexchange.com/questions/161377/python-snake-game-with-pygame
+from Snake import Snake
+from Board import Board
+from SnakeBody import SnakeBody
+from Food import Food
 import pygame
+import time
+import random
+import csv
+import numpy as np
 
 
-def drawsnake(snake):
-    for i in range(len(snake)):
-        pygame.draw.rect(game_board.game_display, board.teal, (snake[i].x, snake[i].y, Snake.factor, Snake.factor))
-    pygame.draw.rect(game_board.game_display, board.gold, (snake[i].x, snake[i].y, Snake.factor, Snake.factor - 3))
-    pygame.display.update()
+def UpdtDataSet(data_set, mov, snake, food):
+    # initDataSet('DataSets.csv')
+    new_row = np.array([0] * 258)
+    new_row[int(food.food_y / 10) * 16 + int(food.food_x / 10)] = 1
+    for i in range(1, (len(snake) - 1)):
+        new_row[int(snake[i].y / 10) * 16 + int(snake[i].x / 10)] = 2
+    new_row[int(snake[0].y / 10) * 16 + int(snake[0].x / 10)] = 3
+    new_row[257] = mov
+
+    data_set = np.vstack([data_set, new_row])
+    return data_set
 
 
-# def update_snake(score):
-#    i = len(snake) - 1
-#
-#    while i > 0:
-#        snake[i].x = snake[i - 1].x
-#        snake[i].y = snake[i - 1].y
-#        i -= 1    
+def main():
+    clock = pygame.time.Clock()
+    display_width = 160
+    display_height = 160
 
+    # no idea how does the score works.
+    score = 60
 
-########### M A I N ##############
-if __name__ == "__main__":
-    game_board = board(500, 500)
-    snake = [Snake(230, 220), Snake(240, 220), Snake(250, 220)]
+    game_display = Board(display_width, display_height)
+    snake = Snake(20, 20, 3)
+    food = Food(0, display_width, display_height, 10)
+    # x = 0
+    # y = 0
     x_change = 0
     y_change = 0
-    drawsnake(snake)
-    exitGame = False
-    while not exitGame:
-        for event in pygame.event.get():  # {}
-            if event.type == pygame.QUIT:  # if clicked on exit
-                exitGame = True
+    first_time = True
+    eat = True
+    mov = 0
 
+    datsts = np.arange(258)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                break
             if event.type == pygame.KEYDOWN:
                 first_time = False
                 if event.key == pygame.K_LEFT:
-                    if x_change is not 10:
+                    if x_change != 10:
                         x_change = -10
                         y_change = 0
+                        mov = 4
                 elif event.key == pygame.K_RIGHT:
                     if x_change != -10:
                         x_change = 10
                         y_change = 0
-        #               elif event.key == pygame.K_UP:
-        #                   if y_change is not 10:
-        #                       x_change = 0
-        #                       y_change = -10
-        #               elif event.key == pygame.K_DOWN:
-        #                   if y_change != -10:
-        #                       x_change = 0
-        #                       y_change = 10
-        #               elif event.key == pygame.K_c:
-        #                   x_change = 0
-        #                   y_change = 0
+                        mov = 6
+                elif event.key == pygame.K_UP:
+                    if y_change != 10:
+                        x_change = 0
+                        y_change = -10
+                        mov = 8
+                elif event.key == pygame.K_DOWN:
+                    if y_change != -10:
+                        x_change = 0
+                        y_change = 10
+                        mov = 2
 
-        #       if not first_time:
-        #            update_snake(score)
-        #       if score % 10 == 0 and eat:
-        #           snake.append(snake_body(snake[len(snake)-1].x, snake[len(snake)-1].y))
-        #            print(len(snake))
-        #            eat = False
+        datsts = UpdtDataSet(datsts, mov, snake, food)
 
-        snake[0].x += x_change
-        snake[0].y += y_change
-        #            if event.type == pygame.KEYDOWN:
-        #                if event.key == pygame.K_LEFT:
-        #                    lead_x -= 10
-        #                if event.key == pygame.K_RIGHT:
-        #                    lead_x += 10
-        pygame.display.update()
+        if not first_time:
+            snake.update(score)
+        if score % 10 == 0 and eat:
+            snake.append(SnakeBody(snake[len(snake) - 1].x, snake[len(snake) - 1].y))
+            print(len(snake))
+            eat = False
+        snake.move_head(x_change, y_change)
 
-    # {}
-    game_board.close()
+        if (snake[0].x < food.food_x + 10 and snake[0].x >= food.food_x
+                and snake[0].y < food.food_y + 10 and snake[0].y >= food.food_y):
+            score += 10
+            food = Food(0, display_width, display_height, 10)
+            eat = True
+
+        if snake.check_death(display_width, display_height):
+            game_display.pop_exit_window(datsts)
+
+        game_display.GAME_display.fill(Board.white)
+
+        pygame.draw.rect(game_display.GAME_display, Board.red, (food.food_x, food.food_y, Snake.factor, Snake.factor))
+        snake.draw(game_display.GAME_display)
+
+        pygame.display.flip()
+        time.sleep(0.045)
+        clock.tick(60)
+
+
+if __name__ == "__main__":
+    main()
+
