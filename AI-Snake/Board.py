@@ -49,9 +49,14 @@ class Board:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     # quit()
+                    flag = False
+                    return False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_x:
                         pygame.quit()
                         # quit()
-                    '''elif event.key == pygame.K_c:
-                        self.clean() '''
+                        flag = False
+                        return False
+                    elif event.key == pygame.K_c:
+                        self.clean()
+                        return True
