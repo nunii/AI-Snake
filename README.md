@@ -11,7 +11,7 @@ We will implement multiple techniques which we will study on our course, startin
 First, we might change the structure of our data sets, but for now that’s how we use it:
 The data is being represented as a CSV file for each game we have played. It's a matrix of 66 columns and an unfixed number of rows. 
 
-The first 64 columns (x) consist of the following numbers:
+The first 64 columns (x) consist of the following numbers: \n
 0 - represents an empty pixel.
 1 - represents a snake body pixel.
 2 - represents the pixel of the head.
