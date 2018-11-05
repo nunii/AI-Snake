@@ -1,6 +1,8 @@
 # AI-Snake
 
 
+
+
 ## proposal
 According to Wikipedia, the seeds of modern AI were planted by classical philosophers who attempted to describe the process of human thinking as the mechanical manipulation of symbols.
 This work culminated in the invention of the programmable digital computer in the 1940s, a machine based on the abstract essence of mathematical reasoning. This device and the ideas behind it inspired a handful of scientists to begin seriously discussing the possibility of building an electronic brain.
@@ -20,10 +22,10 @@ The first 64 columns (x) consist of the following numbers:
 Then there is an empty column, only for making it more comfortable while observing the data.
 
 The last column (y) consists of the following numbers:
-2 - pressed down
-4 - pressed left
-6 - pressed right
-8 - pressed up
-0 - if we haven't clicked anything.
+- 2 - pressed down
+- 4 - pressed left
+- 6 - pressed right
+- 8 - pressed up
+- 0 - if we haven't clicked anything.
 
 The rows aren’t a fixed number, because it represents the "moves" you had until you either won or lost, and for each game record it will probably be different. This way each row is an image of the current board state being normalized to a vector.
