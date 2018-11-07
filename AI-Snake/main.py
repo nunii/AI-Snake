@@ -1,23 +1,20 @@
-# basic snake game code is from : https://codereview.stackexchange.com/questions/161377/python-snake-game-with-pygame
 from Snake import Snake
 from Board import Board
 from SnakeBody import SnakeBody
 from Food import Food
 import pygame
 import time
-import random
-import csv
 import numpy as np
 
 
 def update_data_set(data_set, mov, snake, food):
-    # initDataSet('DataSets.csv')
-    new_row = np.array([0] * 258)
-    new_row[int(food.food_y / 10) * 16 + int(food.food_x / 10)] = 1
+    #initDataSet('DataSets.csv')
+    new_row = np.array([0] * 66)
+    new_row[int(food.food_y / 10) * 8 + int(food.food_x / 10)] = 1
     for i in range(1, (len(snake) - 1)):
-        new_row[int(snake[i].y / 10) * 16 + int(snake[i].x / 10)] = 2
-    new_row[int(snake[0].y / 10) * 16 + int(snake[0].x / 10)] = 3
-    new_row[257] = mov
+        new_row[int(snake[i].y / 10) * 8 + int(snake[i].x / 10)] = 2
+    new_row[int(snake[0].y / 10) * 8 + int(snake[0].x / 10)] = 3
+    new_row[65] = mov
 
     data_set = np.vstack([data_set, new_row])
     return data_set
@@ -25,15 +22,21 @@ def update_data_set(data_set, mov, snake, food):
 
 def main():
     clock = pygame.time.Clock()
-    display_width = 160
-    display_height = 160
+    window_width = 300
+    window_height = 300
+    display_width = 80
+    display_height = 80
 
-    Game = True
-    while Game:
+
+
+    game = True
+    while game:
         score = 60
-        game_display = Board(display_width, display_height)
+        game_display = Board(window_width, window_height)
         snake = Snake(20, 20, 3)
-        food = Food(0, display_width, display_height, 10)
+        food = Food(10, display_width, display_height, 10, snake)
+        font = pygame.font.SysFont('Time New Roman, Arial', 20)
+        text = font.render('Score: %d' % tuple([game_display.game_score]), False, Board.gold)
 
         x_change = 0
         y_change = 0
@@ -41,14 +44,13 @@ def main():
         eat = True
         mov = 0
 
-
-        data_sets = np.arange(258)
+        data_sets = np.arange(66)
 
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    break
+                    game = False
                 if event.type == pygame.KEYDOWN:
                     first_time = False
                     if event.key == pygame.K_LEFT:
@@ -73,7 +75,6 @@ def main():
                             mov = 2
 
             data_sets = update_data_set(data_sets, mov, snake, food)
-
             if not first_time:
                 snake.update(score)
             if score % 10 == 0 and eat:
@@ -85,7 +86,9 @@ def main():
             if (snake[0].x < food.food_x + 10 and snake[0].x >= food.food_x
                     and snake[0].y < food.food_y + 10 and snake[0].y >= food.food_y):
                 score += 10
-                food = Food(0, display_width, display_height, 10)
+                game_display.game_score += 1
+                food = Food(10, display_width, display_height, 10, snake)
+
                 eat = True
 
             if snake.check_death(display_width, display_height):
@@ -93,15 +96,14 @@ def main():
                 if restart == True:
                     break
 
-
-
-            game_display.GAME_display.fill(Board.white)
-
-            pygame.draw.rect(game_display.GAME_display, Board.red, (food.food_x, food.food_y, Snake.factor, Snake.factor))
+            game_display.clean()
+            game_display.borders(display_height, display_width)
+            pygame.draw.rect(game_display.GAME_display, Board.red,
+                             (food.food_x, food.food_y, Snake.factor, Snake.factor))
             snake.draw(game_display.GAME_display)
-
+            game_display.GAME_display.blit(text, (game_display.width - 50, 50))
             pygame.display.flip()
-            time.sleep(0.045)
+            time.sleep(0.080)
             clock.tick(60)
 
 
