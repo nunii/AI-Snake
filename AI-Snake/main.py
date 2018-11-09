@@ -11,9 +11,12 @@ def update_data_set(data_set, mov, snake, food):
     #initDataSet('DataSets.csv')
     new_row = np.array([0] * 66)
     new_row[int(food.food_y / 10) * 8 + int(food.food_x / 10)] = 1
-    for i in range(1, (len(snake) - 1)):
-        new_row[int(snake[i].y / 10) * 8 + int(snake[i].x / 10)] = 2
-    new_row[int(snake[0].y / 10) * 8 + int(snake[0].x / 10)] = 3
+    for i in range(0, (len(snake) - 1)):
+        if i == 0:
+            new_row[int(snake[i].y / 10) * 8 + int(snake[i].x / 10)] = 3
+        else:
+            new_row[int(snake[i].y / 10) * 8 + int(snake[i].x / 10)] = 2
+
     new_row[65] = mov
 
     data_set = np.vstack([data_set, new_row])

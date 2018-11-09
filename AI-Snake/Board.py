@@ -1,13 +1,14 @@
 import pygame
-import numpy as np
 import pandas as pd
 
-
-def new_dat_f(dta_sts_matx):
-    df = pd.DataFrame(dta_sts_matx)
+# Create the CSV file
+def new_dat_f(dta_sts_mat):
+    df = pd.DataFrame(dta_sts_mat)
     df.to_csv("DataSets.csv", header=None, index=None)
 
 
+# This class represents the game board.
+# It uses the pygame library.
 class Board:
     d_white = (250, 250, 250)
     blue_black = (50, 50, 50)
@@ -31,6 +32,7 @@ class Board:
         self.GAME_display.fill(Board.white)
         pygame.display.update()
 
+# Rect(Surface, color, [top left point (x,y) , width, height]) -> Rect
     def borders(self, height, width):
         # top line
         pygame.draw.rect(self.GAME_display, Board.black, [0, 0, height + 20, 10])
@@ -48,7 +50,6 @@ class Board:
         quit()
 
     def pop_exit_window(self, datsts):
-        #       pygame.draw.rect(self.GAME_display, Board.white, (10,80,20,20), 100)
         pygame.font.init()  # you have to call this at the start,
 
         myfont = pygame.font.SysFont('Comic Sans MS', 20)

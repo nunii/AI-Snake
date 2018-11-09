@@ -2,7 +2,7 @@ from SnakeBody import SnakeBody
 from Board import Board
 import pygame
 
-
+# The snake is a list of SnakeBody parts.
 class Snake(list):
 
     factor = 10
