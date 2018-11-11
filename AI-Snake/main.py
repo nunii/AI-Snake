@@ -10,12 +10,12 @@ import numpy as np
 def update_data_set(data_set, mov, snake, food):
     #initDataSet('DataSets.csv')
     new_row = np.array([0] * 66)
-    new_row[int(food.food_y / 10) * 8 + int(food.food_x / 10)] = 1
+    new_row[(int(food.food_y / 10)-1 * 8) + (int(food.food_x / 10)-1)] = 1
     for i in range(0, (len(snake) - 1)):
         if i == 0:
-            new_row[int(snake[i].y / 10) * 8 + int(snake[i].x / 10)] = 3
+            new_row[(int(snake[i].y / 10)-1 * 8) + (int(snake[i].x / 10)-1)] = 3
         else:
-            new_row[int(snake[i].y / 10) * 8 + int(snake[i].x / 10)] = 2
+            new_row[(int(snake[i].y / 10)-1 * 8) + (int(snake[i].x / 10)-1)] = 2
 
     new_row[65] = mov
 
@@ -95,6 +95,7 @@ def main():
                 eat = True
 
             if snake.check_death(display_width, display_height):
+                print("*****DEAD*****")
                 restart = game_display.pop_exit_window(data_sets)
                 if restart == True:
                     break
@@ -106,7 +107,7 @@ def main():
             snake.draw(game_display.GAME_display)
             game_display.GAME_display.blit(text, (game_display.width - 50, 50))
             pygame.display.flip()
-            time.sleep(0.080)
+            time.sleep(0.280)
             clock.tick(60)
 
 
