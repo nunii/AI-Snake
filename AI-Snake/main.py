@@ -10,12 +10,12 @@ import numpy as np
 def update_data_set(data_set, mov, snake, food):
     #initDataSet('DataSets.csv')
     new_row = np.array([0] * 66)
-    new_row[(int(food.food_y / 10)-1 * 8) + (int(food.food_x / 10)-1)] = 1
+    new_row[((int(food.food_y / 10)-1) * 8) + ((int(food.food_x / 10)-1))] = 1
     for i in range(0, (len(snake) - 1)):
         if i == 0:
-            new_row[(int(snake[i].y / 10)-1 * 8) + (int(snake[i].x / 10)-1)] = 3
+            new_row[((int(snake[i].y / 10)-1) * 8) + ((int(snake[i].x / 10)-1))] = 3
         else:
-            new_row[(int(snake[i].y / 10)-1 * 8) + (int(snake[i].x / 10)-1)] = 2
+            new_row[((int(snake[i].y / 10)-1) * 8) + ((int(snake[i].x / 10)-1))] = 2
 
     new_row[65] = mov
 
@@ -31,7 +31,7 @@ def main():
     display_height = 80
 
 
-
+   
     game = True
     while game:
         score = 60
@@ -40,13 +40,13 @@ def main():
         food = Food(10, display_width, display_height, 10, snake)
         font = pygame.font.SysFont('Time New Roman, Arial', 20)
         text = font.render('Score: %d' % tuple([game_display.game_score]), False, Board.gold)
-
+      
         x_change = 0
         y_change = 0
         first_time = True
         eat = True
         mov = 0
-
+       
         data_sets = np.arange(66)
 
         while True:
@@ -77,8 +77,9 @@ def main():
                             y_change = 10
                             mov = 2
 
-            data_sets = update_data_set(data_sets, mov, snake, food)
+           
             if not first_time:
+                data_sets = update_data_set(data_sets, mov, snake, food)
                 snake.update(score)
             if score % 10 == 0 and eat:
                 snake.append(SnakeBody(snake[len(snake) - 1].x, snake[len(snake) - 1].y))
@@ -113,4 +114,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
