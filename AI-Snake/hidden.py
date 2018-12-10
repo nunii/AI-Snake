@@ -23,29 +23,33 @@ data_set2 = data_set.astype('float32')
 # we put the features into X (and not x) and the observation to Y (and not y)
 #graph=tf.Graph()
 
-(hidden1_size, hidden2_size, hidden3_size, hidden4_size) = (140, 85, 100, 40)
+(hidden1_size, hidden2_size, hidden3_size, hidden4_size, hidden5_size) = (80, 40, 32, 16,4)
 
 x = tf.placeholder(tf.float32, [None,64])
 y_ = tf.placeholder(tf.float32, [None,5])
 
 W1 = tf.Variable(tf.truncated_normal([64, hidden1_size], stddev=0.1))
-b1 = tf.Variable(tf.constant(0.1, shape=[hidden1_size]))
+b1 = tf.Variable(tf.constant(0.9, shape=[hidden1_size]))
 z1 = tf.nn.relu(tf.matmul(x,W1)+b1)
 
 W2 = tf.Variable(tf.truncated_normal([hidden1_size, hidden2_size], stddev=0.1))
-b2 = tf.Variable(tf.constant(0.1, shape=[hidden2_size]))
+b2 = tf.Variable(tf.constant(0.9, shape=[hidden2_size]))
 z2 = tf.nn.relu(tf.matmul(z1,W2)+b2)
 
 W3 = tf.Variable(tf.truncated_normal([hidden2_size, hidden3_size], stddev=0.1))
-b3 = tf.Variable(tf.constant(0.1, shape=[hidden3_size]))
+b3 = tf.Variable(tf.constant(0.9, shape=[hidden3_size]))
 z3 = tf.nn.relu(tf.matmul(z2,W3)+b3)
 
 W4 = tf.Variable(tf.truncated_normal([hidden3_size, hidden4_size], stddev=0.1))
-b4 = tf.Variable(tf.constant(0.1, shape=[hidden4_size]))
+b4 = tf.Variable(tf.constant(0.9, shape=[hidden4_size]))
 z4 = tf.nn.relu(tf.matmul(z3,W4)+b4)
-
+'''
+W5 = tf.Variable(tf.truncated_normal([hidden4_size, hidden5_size], stddev=0.1))
+b5 = tf.Variable(tf.constant(0.01, shape=[hidden5_size]))
+z5 = tf.nn.relu(tf.matmul(z4,W5)+b5)
+'''
 W = tf.Variable(tf.truncated_normal([hidden4_size, 5], stddev=0.1))
-b = tf.Variable(tf.constant(0.1, shape=[5]))
+b = tf.Variable(tf.constant(0.9, shape=[5]))
 y = tf.nn.softmax(tf.matmul(z4, W) + b)
 
 
@@ -58,7 +62,7 @@ sess.run(init)
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-for j in range(1000):
+for j in range(10000):
     for i in range(len(data_set)):
         X = data_set.iloc[i, :-2].values
         X = X.reshape(1,64)
