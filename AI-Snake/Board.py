@@ -1,10 +1,12 @@
 import pygame
 import pandas as pd
+import time
 
 # Create the CSV file
 def new_dat_f(dta_sts_mat):
     df = pd.DataFrame(dta_sts_mat)
-    df.to_csv("DataSets.csv", header=None, index=None)
+    date=time.strftime("%Y-%m-%d %H-%M-%S")
+    df.to_csv("DataSet "+date+".csv", header=None, index=None)
 
 
 # This class represents the game board.
@@ -49,7 +51,7 @@ class Board:
         pygame.quit()
         quit()
 
-    def pop_exit_window(self, datsts):
+    def pop_exit_window(self):#, datsts):
         pygame.font.init()  # you have to call this at the start,
 
         myfont = pygame.font.SysFont('Comic Sans MS', 20)
@@ -59,7 +61,7 @@ class Board:
         self.GAME_display.blit(text2, (self.width/2 - 60, self.height/2))
         pygame.display.update()
 
-        new_dat_f(datsts)
+        #new_dat_f(datsts)
 
         flag = True
         while flag:

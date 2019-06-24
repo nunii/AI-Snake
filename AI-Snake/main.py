@@ -20,6 +20,8 @@ def update_data_set(data_set, mov, snake, food):
     new_row[65] = mov  # The action we took.
 
     data_set = np.vstack([data_set, new_row])  # Stacks the row into the CSV file.
+    if data_set[len(data_set)-2][65] == 0:
+        
     return data_set
 
 

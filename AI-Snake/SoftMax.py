@@ -30,7 +30,7 @@ b = tf.Variable(tf.zeros([5]))
 y = tf.nn.softmax(tf.matmul(x, W) + b)
 
 cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
-train_step = tf.train.GradientDescentOptimizer(0.1).minimize(cross_entropy)
+train_step = tf.train.GradientDescentOptimizer(0.001).minimize(cross_entropy)
 init = tf.global_variables_initializer()
 sess = tf.Session()
 sess.run(init)
@@ -39,7 +39,7 @@ print(y,y_)
 
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-for j in range(100):
+for j in range(10):
     for i in range(len(data_set)):
         X = data_set.iloc[i, :-2].values
         X = X.reshape(1,64)
